@@ -153,3 +153,20 @@ header .match-name {
     outline-color: #f05d71;
     outline-width: 2px;
 }
+
+/* Cuando el label está asociado a un input enfocado */
+.label-focus {
+    color: #f05d71;   /* mismo tono que el título */
+}
+
+/* Estilos para errores de validación */
+.input-error {
+    border-color: #e63946;
+}
+
+.error-msg {
+    color: #e63946;
+    font-size: 0.8rem;
+    margin-top: -0.3rem;
+    margin-bottom: 0.7rem;
+}
