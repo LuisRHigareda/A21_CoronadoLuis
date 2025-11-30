@@ -80,10 +80,14 @@ window.onload = function () {
     llenarNacionalidad();
 };
 
-function llenarNacionalidad(){
+function llenarNacionalidad() {
     const nacionalidad = document.getElementById("nationality");
-    
-    for(let{key, name} of NACIONALIDADES_ACEPTADAS){
+
+    if (!nacionalidad) {
+        return;
+    }
+
+    for (let { key, name } of NACIONALIDADES_ACEPTADAS) {
         const option = document.createElement("option");
         option.value = key;
         option.innerHTML = name;
@@ -91,17 +95,95 @@ function llenarNacionalidad(){
     }
 }
 
-function resaltar(evento){
-    evento.target.classList.add("selected");
+// Manejo de focus / blur y labels 
+
+function resaltar(evento) {
+    const elemento = evento.target;
+    elemento.classList.add("selected");
+    cambiarColorLabel(elemento, true);
 }
 
-function noResaltar(evento){
-    const clase = evento.target.classList.contains("selected");
-    if(clase){
-        evento.target.classList.remove("selected");
+function noResaltar(evento) {
+    const elemento = evento.target;
+
+    if (elemento.classList.contains("selected")) {
+        elemento.classList.remove("selected");
+    }
+
+    cambiarColorLabel(elemento, false);
+}
+
+function resaltarDesresaltar(evento) {
+    const elemento = evento.target;
+    elemento.classList.toggle("selected");
+    const estaSeleccionado = elemento.classList.contains("selected");
+    cambiarColorLabel(elemento, estaSeleccionado);
+}
+
+function cambiarColorLabel(campo, encender) {
+    if (!campo.id) {
+        return;
+    }
+
+    const label = document.querySelector('label[for="' + campo.id + '"]');
+
+    if (!label) {
+        return;
+    }
+
+    if (encender) {
+        label.classList.add("label-focus");
+    } else {
+        label.classList.remove("label-focus");
     }
 }
 
-function resaltarDesresaltar(evento){
-    evento.target.classList.toggle("selected");
+// Validaciones 
+
+function validarNombre(campo) {
+    const valor = campo.value.trim();
+
+    if (valor === "") {
+        mostrarError(campo, "Este campo no puede estar vacío.");
+        campo.classList.add("input-error");
+        return false;
+    }
+
+    if (!regexSoloLetras.test(valor)) {
+        mostrarError(campo, "Solo se permiten letras (puedes usar acentos).");
+        campo.classList.add("input-error");
+        return false;
+    }
+
+    mostrarError(campo, "");
+    campo.classList.remove("input-error");
+    return true;
+}
+
+function validarNoVacio(campo) {
+    const valor = campo.value.trim();
+
+    if (valor === "") {
+        mostrarError(campo, "Este campo no puede estar vacío.");
+        campo.classList.add("input-error");
+        return false;
+    }
+
+    mostrarError(campo, "");
+    campo.classList.remove("input-error");
+    return true;
+}
+
+function mostrarError(campo, mensaje) {
+    if (!campo.id) {
+        return;
+    }
+
+    const spanError = document.getElementById(campo.id + "-error");
+
+    if (!spanError) {
+        return;
+    }
+
+    spanError.textContent = mensaje || "";
 }
